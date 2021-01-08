@@ -3,9 +3,9 @@
 
 __author__ = 'eugtsa'
 
-from config_manager import ConfigManager
-from gui_manager import GuiManager
-from keybard_status import KeyboardStatus
+from src.config_manager import ConfigManager
+from src.gui_manager import GuiManager
+from src.keybard_status import KeyboardStatus
 
 
 class ThreadedClient:
@@ -15,7 +15,7 @@ class ThreadedClient:
         self.config = ConfigManager()
         self.key_trainer = KeyboardStatus(self.config)
 
-        master.protocol('WM_DELETE_WINDOW', self.kill_and_destroy)
+        self.master.protocol('WM_DELETE_WINDOW', self.kill_and_destroy)
 
         self.gui_manager = GuiManager(master, self.config, self.key_trainer.my_queue, self.key_trainer)
 
@@ -34,8 +34,6 @@ class ThreadedClient:
     def periodic_call(self):
         self.gui_manager.process_queue()
         if not self.running:
-            # import sys
-            # sys.exit(1)
             self.kill_and_destroy()
         self.master.after(20, self.periodic_call)
 
